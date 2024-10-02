@@ -1,7 +1,8 @@
-package com.immilog.chatserver.infra.mongodb.collections
+package com.immilog.chatserver.chat.infra.mongodb.collections
 
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Document
+import java.time.LocalDateTime
 
 @Document(collection = "chatMessages")
 data class ChatMessageCollection(
@@ -13,5 +14,6 @@ data class ChatMessageCollection(
     val readStatus: Boolean = false,
     val invisibleToSender: Boolean? = null,
     val invisibleToRecipient: Boolean? = null,
-    val attachments: List<String> = listOf()
+    val attachments: List<String> = listOf(),
+    val createdAt: LocalDateTime? = null
 )
