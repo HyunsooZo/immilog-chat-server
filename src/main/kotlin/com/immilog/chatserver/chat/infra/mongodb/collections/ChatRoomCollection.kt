@@ -6,11 +6,11 @@ import org.springframework.data.mongodb.core.mapping.DBRef
 import org.springframework.data.mongodb.core.mapping.Document
 import java.time.LocalDateTime
 
-@Document(collection = "chatRooms")
+@Document(collection = "chatRoom")
 data class ChatRoomCollection(
     @Id val seq: String,
-    val senderId: Long,
-    val recipientId: Long,
+    val sender: User,
+    val recipient: User,
     var isVisibleToSender: Boolean? = null,
     var isVisibleToRecipient: Boolean? = null,
     @DBRef val chats: List<ChatMessageCollection> = mutableListOf(),

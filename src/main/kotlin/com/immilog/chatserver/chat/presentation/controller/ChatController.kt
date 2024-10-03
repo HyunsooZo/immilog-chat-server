@@ -1,22 +1,16 @@
 package com.immilog.chatserver.chat.presentation.controller
 
 import com.immilog.chatserver.chat.application.ChatService
-import com.immilog.chatserver.chat.domain.model.User
-import com.immilog.chatserver.chat.presentation.response.ChatApiResponse
 import io.swagger.annotations.ApiOperation
 import lombok.RequiredArgsConstructor
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-import java.time.LocalDateTime
 
 @RestController
 @RequiredArgsConstructor
 class ChatController {
     private final val chatService: ChatService? = null
 
-    /**
-     * 채팅 내역 조회
-     */
     @ApiOperation(value = "채팅 내역 조회", notes = "채팅 내역을 조회합니다.")
     @GetMapping("/rooms/{chatRoomSeq}")
     fun getChats(
@@ -42,14 +36,18 @@ class ChatController {
         val attachments: List<String>? = null
     )
 
-    data class ChatResult(
-        val id: Long? = null,
-        val chatRoomSeq: Long? = null,
-        val content: String? = null,
-        val sender: User? = null,
-        val recipient: User? = null,
-        val readStatus: Boolean? = null,
-        val attachments: List<String>? = null,
-        val createdAt: LocalDateTime? = null
-    )
+    data class ChatApiResponse(
+        var status: Int? = 200,
+        var message: String? = "success",
+        var data: Any? = null,
+        var list: List<Any>? = ArrayList(),
+    ) {
+        companion object {
+            fun <T> of(
+                data: T?
+            ): ChatApiResponse {
+                return ChatApiResponse(200, "success", data)
+            }
+        }
+    }
 }
