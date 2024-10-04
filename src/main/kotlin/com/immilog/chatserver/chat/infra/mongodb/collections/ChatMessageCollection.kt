@@ -6,11 +6,11 @@ import java.time.LocalDateTime
 
 @Document(collection = "chatMessage")
 data class ChatMessageCollection(
-    @Id val id: String,
-    val chatRoomCollection: ChatRoomCollection? = null,
+    @Id val id: String? = null,
+    val chatRoomSeq: String? = null,
     val content: String? = null,
-    val senderId: String? = null,
-    val recipientId: String? = null,
+    val senderSeq: Long? = null,
+    val recipientSeq: Long? = null,
     val readStatus: Boolean = false,
     val invisibleToSender: Boolean? = null,
     val invisibleToRecipient: Boolean? = null,

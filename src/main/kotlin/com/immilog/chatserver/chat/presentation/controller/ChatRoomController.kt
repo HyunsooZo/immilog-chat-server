@@ -29,7 +29,7 @@ class ChatRoomController {
     }
 
     data class ChatRoomResult(
-        val seq: Long? = null,
+        val seq: String? = null,
         val sender: User? = null,
         val recipient: User? = null,
         val lastChat: String? = null,

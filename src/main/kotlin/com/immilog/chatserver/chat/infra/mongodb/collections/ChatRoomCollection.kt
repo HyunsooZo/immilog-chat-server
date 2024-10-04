@@ -8,7 +8,7 @@ import java.time.LocalDateTime
 
 @Document(collection = "chatRoom")
 data class ChatRoomCollection(
-    @Id val seq: String,
+    @Id val seq: String? = null,
     val sender: User,
     val recipient: User,
     var isVisibleToSender: Boolean? = null,

@@ -6,7 +6,7 @@ import java.time.LocalDateTime
 import java.util.*
 
 data class ChatRoom(
-    val seq: Long,
+    val seq: String? = null,
     val sender: User,
     val recipient: User,
     val lastChat: String? = null,
@@ -21,19 +21,19 @@ data class ChatRoom(
             val lastChat = if (chatRoomCollection.chats.isEmpty()) " " else chatRoomCollection.chats.last().content
             val lastChatTime = if (chatRoomCollection.chats.isEmpty()) LocalDateTime.now() else chatRoomCollection.chats.last().createdAt
             val unreadCountForSender = chatRoomCollection.chats.stream()
-                .filter { chat -> Objects.equals(chat.senderId, chatRoomCollection.recipient) }
+                .filter { chat -> Objects.equals(chat.senderSeq, chatRoomCollection.recipient.seq) }
                 .filter { chat -> !chat.readStatus }
                 .count()
                 .toInt()
 
             val unreadCountForRecipient = chatRoomCollection.chats.stream()
-                .filter { chat -> Objects.equals(chat.senderId, chatRoomCollection.sender) }
+                .filter { chat -> Objects.equals(chat.senderSeq, chatRoomCollection.sender.seq) }
                 .filter { chat -> !chat.readStatus }
                 .count()
                 .toInt()
 
             return Builder()
-                .seq(chatRoomCollection.seq.toLong())
+                .seq(chatRoomCollection.seq)
                 .sender(chatRoomCollection.sender)
                 .recipient(chatRoomCollection.recipient)
                 .lastChat(lastChat)
@@ -45,7 +45,7 @@ data class ChatRoom(
     }
 
     class Builder {
-        private var seq: Long = 0
+        private var seq: String? = null
         private var sender: User = User()
         private var recipient: User = User()
         private var lastChat: String? = null
@@ -53,7 +53,7 @@ data class ChatRoom(
         private var unreadCountForRecipient: Int? = null
         private var lastChatTime: LocalDateTime? = null
 
-        fun seq(seq: Long) = apply { this.seq = seq }
+        fun seq(seq: String?) = apply { this.seq = seq }
         fun sender(sender: User) = apply { this.sender = sender }
         fun recipient(recipient: User) = apply { this.recipient = recipient }
         fun lastChat(lastChat: String?) = apply { this.lastChat = lastChat }
