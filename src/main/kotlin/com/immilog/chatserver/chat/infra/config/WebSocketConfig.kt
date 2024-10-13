@@ -1,23 +1,23 @@
 package com.immilog.chatserver.chat.infra.config
 
-import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.web.reactive.handler.SimpleUrlHandlerMapping
-import org.springframework.web.reactive.socket.WebSocketHandler
-import org.springframework.web.reactive.socket.server.support.WebSocketHandlerAdapter
+import org.springframework.messaging.simp.config.MessageBrokerRegistry
+import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker
+import org.springframework.web.socket.config.annotation.StompEndpointRegistry
+import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer
 
 @Configuration
-class WebSocketConfig(
-    private val chatWebSocketHandler: WebSocketHandler
-) {
-    @Bean
-    fun webSocketHandlerAdapter() = WebSocketHandlerAdapter()
+@EnableWebSocketMessageBroker
+class WebSocketConfig : WebSocketMessageBrokerConfigurer {
 
-    @Bean
-    fun webSocketHandlerMapping(): SimpleUrlHandlerMapping {
-        val map = mapOf("/ws/chat" to chatWebSocketHandler)
-        return SimpleUrlHandlerMapping().apply {
-            urlMap = map
-        }
+    override fun configureMessageBroker(registry: MessageBrokerRegistry) {
+        registry.enableSimpleBroker("/topic", "/queue")
+        registry.setApplicationDestinationPrefixes("/app")
+    }
+
+    override fun registerStompEndpoints(registry: StompEndpointRegistry) {
+        registry.addEndpoint("/ws/chat")
+            .setAllowedOriginPatterns("localhost:5173","https://ko-meet-front.vercel.app/")
+            .withSockJS()
     }
 }
