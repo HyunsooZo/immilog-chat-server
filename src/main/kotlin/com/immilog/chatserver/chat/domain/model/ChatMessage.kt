@@ -2,6 +2,7 @@ package com.immilog.chatserver.chat.domain.model
 
 import com.immilog.chatserver.chat.domain.event.ChatEvent
 import com.immilog.chatserver.chat.infra.mongodb.collections.ChatMessageCollection
+import com.immilog.chatserver.chat.presentation.websocket.WebSocketController
 import java.time.LocalDateTime
 
 data class ChatMessage(
@@ -40,4 +41,20 @@ data class ChatMessage(
         attachments = attachments ?: listOf(),
         createdAt = createdAt ?: LocalDateTime.now()
     )
+
+    companion object {
+        fun from(
+            chatMessageRequest: WebSocketController.ChatMessageRequest
+        ): ChatMessage {
+            return ChatMessage(
+                chatRoomSeq = chatMessageRequest.chatRoomSeq.toString(),
+                content = chatMessageRequest.content,
+                senderSeq = chatMessageRequest.senderSeq,
+                attachments = chatMessageRequest.attachments ?: listOf(),
+                readStatus = false,
+                createdAt = LocalDateTime.now()
+            )
+
+        }
+    }
 }

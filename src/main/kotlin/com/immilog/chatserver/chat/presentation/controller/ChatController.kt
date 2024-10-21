@@ -1,6 +1,6 @@
 package com.immilog.chatserver.chat.presentation.controller
 
-import com.immilog.chatserver.chat.application.ChatService
+import com.immilog.chatserver.chat.application.ChatMessageService
 import io.swagger.annotations.ApiOperation
 import lombok.RequiredArgsConstructor
 import org.springframework.http.ResponseEntity
@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequiredArgsConstructor
 class ChatController {
-    private final val chatService: ChatService? = null
+    private final val chatMessageService: ChatMessageService? = null
 
     @ApiOperation(value = "채팅 내역 조회", notes = "채팅 내역을 조회합니다.")
     @GetMapping("/rooms/{chatRoomSeq}")
