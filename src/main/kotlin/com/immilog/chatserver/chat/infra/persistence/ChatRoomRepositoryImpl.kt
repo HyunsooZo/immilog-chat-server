@@ -8,8 +8,7 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Repository
-import reactor.core.publisher.Flux
-import reactor.core.publisher.Mono
+import java.util.*
 
 @Repository
 class ChatRoomRepositoryImpl(
@@ -47,6 +46,14 @@ class ChatRoomRepositoryImpl(
             pageable,
             chatRoomList.size.toLong()
         )
+    }
+
+    override fun findChatRoomBySeq(
+        chatRoomSeq: Long
+    ): Optional<ChatRoom> {
+        return chatRoomMongoDBRepository.findById(chatRoomSeq.toString())
+            .map { chatRoomCollection -> ChatRoom.from(chatRoomCollection) }
+            .blockOptional()
     }
 
 }

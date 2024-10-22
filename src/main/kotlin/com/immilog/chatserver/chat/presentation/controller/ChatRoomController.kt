@@ -27,16 +27,6 @@ class ChatRoomController {
             .status(HttpStatus.OK)
             .body(ChatApiResponse.of(chatRoom))
     }
-
-    data class ChatRoomResult(
-        val seq: String? = null,
-        val sender: User? = null,
-        val recipient: User? = null,
-        val lastChat: String? = null,
-        val unreadCountForSender: Int? = null,
-        val unreadCountForRecipient: Int? = null,
-        val lastChatTime: LocalDateTime? = null
-    )
     data class ChatApiResponse(
         var status: Int? = 200,
         var message: String? = "success",

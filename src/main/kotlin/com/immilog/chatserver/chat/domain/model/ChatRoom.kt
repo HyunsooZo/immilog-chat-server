@@ -1,5 +1,6 @@
 package com.immilog.chatserver.chat.domain.model
 
+import com.immilog.chatserver.chat.application.ChatRoomResult
 import com.immilog.chatserver.chat.infra.mongodb.collections.ChatRoomCollection
 import com.immilog.chatserver.chat.presentation.controller.ChatRoomController
 import java.time.LocalDateTime
@@ -72,9 +73,9 @@ data class ChatRoom(
         )
     }
 
-    fun toApiResult(): ChatRoomController.ChatRoomResult {
-        return ChatRoomController.ChatRoomResult(
-            seq = this.seq,
+    fun toResult(): ChatRoomResult {
+        return ChatRoomResult(
+            seq = this.seq?.toLong(),
             sender = this.sender,
             recipient = this.recipient,
             lastChat = this.lastChat,
