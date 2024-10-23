@@ -3,6 +3,7 @@ package com.immilog.chatserver.chat.application
 import com.immilog.chatserver.chat.domain.model.ChatMessage
 import com.immilog.chatserver.chat.domain.model.User
 import com.immilog.chatserver.chat.domain.repository.ChatMessageRepository
+import com.immilog.chatserver.chat.infra.gateway.ImmilogGateway
 import com.immilog.chatserver.chat.presentation.websocket.WebSocketController
 import org.springframework.stereotype.Service
 import reactor.kotlin.core.publisher.toMono
@@ -11,12 +12,22 @@ import java.time.LocalDateTime
 @Service
 class ChatMessageService(
     private val chatMessageRepository: ChatMessageRepository
+    private val immilogGateway: ImmilogGateway
 ) {
     fun saveChat(
         chatMessageRequest: WebSocketController.ChatMessageRequest
     ): ChatMessageResult {
         val chatMessage = ChatMessage.from(chatMessageRequest)
         val chatMessageMono = chatMessageRepository.save(chatMessage).toMono()
+        immilogGateway.sendEventToMainServer(
+            ImmilogGateway.EventRequest(
+                chatRoomSeq = chatMessage.chatRoomSeq.toLong(),
+                senderSeq = chatMessage.senderSeq!!,
+                recipientSeq = chatMessage.recipientSeq!!,
+                message = chatMessage.content ?: "",
+                attachments = chatMessage.attachments ?: emptyList()
+            )
+        ).subscribe()
         return ChatMessageResult.from(chatMessageMono.block())
     }
 
