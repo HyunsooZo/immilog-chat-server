@@ -1,40 +1,25 @@
 package com.immilog.chatserver.chat.domain.model
 
-import com.immilog.chatserver.chat.domain.event.ChatEvent
 import com.immilog.chatserver.chat.infra.mongodb.collections.ChatMessageCollection
-import com.immilog.chatserver.chat.presentation.websocket.WebSocketController
+import com.immilog.chatserver.chat.service.model.ChatMessageResult
 import java.time.LocalDateTime
 
 data class ChatMessage(
     val id: String? = null,
-    val chatRoomSeq: String,
+    val chatRoomSeq: Long,
     val content: String? = null,
-    val senderSeq: Long? = null,
-    val recipientSeq: Long? = null,
+    val sender: User,
+    val recipient: User,
     val readStatus: Boolean? = null,
     val attachments: List<String>? = null,
     val createdAt: LocalDateTime? = null
 ) {
-    fun from(
-        chatEvent: ChatEvent
-    ): ChatMessage {
-        return ChatMessage(
-            chatRoomSeq = chatEvent.chatRoomSeq,
-            content = chatEvent.message,
-            senderSeq = chatEvent.senderSeq,
-            recipientSeq = chatEvent.recipientSeq,
-            readStatus = false,
-            attachments = chatEvent.attachments,
-            createdAt = chatEvent.timestamp
-        )
-    }
-
     fun toCollection(): ChatMessageCollection = ChatMessageCollection(
         id = id,
         chatRoomSeq = chatRoomSeq,
-        content = content,
-        senderSeq = senderSeq,
-        recipientSeq = recipientSeq,
+        content = content ?: "",
+        sender = sender,
+        recipient = recipient,
         readStatus = readStatus ?: false,
         invisibleToSender = false,
         invisibleToRecipient = false,
@@ -42,19 +27,14 @@ data class ChatMessage(
         createdAt = createdAt ?: LocalDateTime.now()
     )
 
-    companion object {
-        fun from(
-            chatMessageRequest: WebSocketController.ChatMessageRequest
-        ): ChatMessage {
-            return ChatMessage(
-                chatRoomSeq = chatMessageRequest.chatRoomSeq.toString(),
-                content = chatMessageRequest.content,
-                senderSeq = chatMessageRequest.senderSeq,
-                attachments = chatMessageRequest.attachments ?: listOf(),
-                readStatus = false,
-                createdAt = LocalDateTime.now()
-            )
-
-        }
-    }
+    fun toResult(): ChatMessageResult = ChatMessageResult(
+        id = id,
+        chatRoomSeq = chatRoomSeq,
+        content = content,
+        sender = sender,
+        recipient = recipient,
+        readStatus = readStatus,
+        attachments = attachments,
+        createdAt = createdAt
+    )
 }

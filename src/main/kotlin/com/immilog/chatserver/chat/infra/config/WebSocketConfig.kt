@@ -1,23 +1,27 @@
-package com.immilog.chatserver.chat.infra.config
+package com.immilog.chatserver.chat.config
 
+import com.immilog.chatserver.chat.api.websocket.ChatWebSocketHandler
+import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.messaging.simp.config.MessageBrokerRegistry
-import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker
-import org.springframework.web.socket.config.annotation.StompEndpointRegistry
-import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer
+import org.springframework.web.reactive.HandlerMapping
+import org.springframework.web.reactive.handler.SimpleUrlHandlerMapping
+import org.springframework.web.reactive.socket.server.support.WebSocketHandlerAdapter
 
 @Configuration
-@EnableWebSocketMessageBroker
-class WebSocketConfig : WebSocketMessageBrokerConfigurer {
+class WebSocketConfig {
 
-    override fun configureMessageBroker(registry: MessageBrokerRegistry) {
-        registry.enableSimpleBroker("/topic", "/queue")
-        registry.setApplicationDestinationPrefixes("/app")
+    @Bean
+    fun handlerMapping(
+        chatWebSocketHandler: ChatWebSocketHandler
+    ): HandlerMapping {
+        val map: MutableMap<String, Any> = LinkedHashMap()
+        map["/ws/chat"] = chatWebSocketHandler
+        val mapping = SimpleUrlHandlerMapping()
+        mapping.order = -1
+        mapping.urlMap = map
+        return mapping
     }
 
-    override fun registerStompEndpoints(registry: StompEndpointRegistry) {
-        registry.addEndpoint("/ws/chat")
-            .setAllowedOriginPatterns("localhost:5173","https://ko-meet-front.vercel.app/")
-            .withSockJS()
-    }
+    @Bean
+    fun handlerAdapter() = WebSocketHandlerAdapter()
 }
