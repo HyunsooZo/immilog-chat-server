@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler
 class GlobalExceptionHandler {
 
     @ExceptionHandler(ChatException::class)
-    fun handleChatException(
+    fun <T> handleChatException(
         ex: ChatException
-    ): ResponseEntity<ChatApiResponse> {
+    ): ResponseEntity<ChatApiResponse<T>> {
         val errorCode = ex.message
         val response = ChatApiResponse(
             status = 400,
@@ -23,9 +23,9 @@ class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(Exception::class)
-    fun handleGeneralException(
+    fun <T> handleGeneralException(
         ex: Exception
-    ): ResponseEntity<ChatApiResponse> {
+    ): ResponseEntity<ChatApiResponse<T>> {
         val response = ChatApiResponse(
             status = HttpStatus.INTERNAL_SERVER_ERROR.value(),
             message = ex.message ?: "Internal Server Error",
@@ -35,4 +35,5 @@ class GlobalExceptionHandler {
             .status(HttpStatus.INTERNAL_SERVER_ERROR)
             .body(response)
     }
+
 }

@@ -1,10 +1,11 @@
 package com.immilog.chatserver.chat.api.model
 
+import com.mongodb.lang.Nullable
 
-data class ChatApiResponse<T>(
+data class ChatApiResponse<out T>(
     val status: Int = 200,
     val message: String = "success",
-    val data: T? = null
+    @Nullable val data: T? = null
 ) {
     companion object {
         fun <T> of(data: T): ChatApiResponse<T> {
