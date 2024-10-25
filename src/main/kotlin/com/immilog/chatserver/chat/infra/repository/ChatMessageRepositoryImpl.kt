@@ -1,4 +1,4 @@
-package com.immilog.chatserver.chat.infra.persistence
+package com.immilog.chatserver.chat.infra.repository
 
 import com.immilog.chatserver.chat.domain.repository.ChatMessageRepository
 import com.immilog.chatserver.chat.infra.mongodb.collections.ChatMessageCollection

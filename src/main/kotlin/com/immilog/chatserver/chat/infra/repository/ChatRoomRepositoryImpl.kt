@@ -1,4 +1,4 @@
-package com.immilog.chatserver.chat.infra.persistence
+package com.immilog.chatserver.chat.infra.repository
 
 import com.immilog.chatserver.chat.domain.model.ChatRoom
 import com.immilog.chatserver.chat.domain.model.User
